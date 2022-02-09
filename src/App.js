@@ -1,18 +1,25 @@
 import './App.css';
 import {useEffect,useState} from 'react';
-import {getWeatherInfo} from './service/WeatherAPIservice';
+import {WeatherService} from './service/WeatherAPIservice';
 
 function WeatherInfoBlock({city}){
   const [isNotValidResponse, setIsNotValidResponse] = useState(false);
-  const [{temp, flTemp},setInfo] = useState({});
+  const [{temp, flTemp},setInfo] = useState({temp:0,flTemp:0});
 
-  useEffect(() => getWeatherInfo(city)
-  .then(({current}) => {
-      setInfo({temp:current.temp_c, flTemp:current.feelslike_c})
-      setIsNotValidResponse(false); })
-  .catch(() => {
-    setIsNotValidResponse(true);
-  }), [city]);
+  useEffect(() => {
+    const fetchData = async()=>{
+      try{
+        const {current} = await WeatherService.getWeatherInfo(city);
+        setInfo({temp:current.temp_c, flTemp: current.feelslike_c});
+        setIsNotValidResponse(false);
+      }
+      catch{
+        setIsNotValidResponse(true);
+      }
+    }
+    fetchData();
+  }
+  , [city])
 
   return(
     <div>{isNotValidResponse ? <p>Что-то пошло не так</p>:
