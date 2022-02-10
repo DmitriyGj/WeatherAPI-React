@@ -1,6 +1,6 @@
-export class WeatherService
-{
+export class WeatherService {
     static baseUrl = 'http://api.weatherapi.com/v1/current.json'
+    
     static async getWeatherInfo(city){
         const url = `${this.baseUrl}?key=${process.env.REACT_APP_API_KEY}&q=${city}`;
         try{
@@ -9,6 +9,7 @@ export class WeatherService
             if(!response.ok){
                 throw new Error('Что-то пошло не так');
             }
+            
             return response.json();
         }
         catch(e){
